@@ -1,0 +1,8 @@
+[package]
+name = "hello_macro"
+version = "0.0.0"
+workspace = "../.."
+
+[dependencies]
+shio = { path = "../../lib" }
+shio-macro = { path = "../../shio-macro" }
