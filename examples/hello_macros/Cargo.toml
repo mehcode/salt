@@ -1,0 +1,7 @@
+[package]
+name = "hello_macros"
+version = "0.0.0"
+workspace = "../.."
+
+[dependencies]
+shio = { path = "../../lib", features=["nightly"] }

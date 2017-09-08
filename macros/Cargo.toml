@@ -1,5 +1,5 @@
 [package]
-name = "shio-macro"
+name = "shio_macros"
 version = "0.1.0"
 authors = ["Quentin Laveau <qlaveau@gmail.com>"]
 workspace = ".."

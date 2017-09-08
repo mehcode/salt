@@ -1,8 +1,6 @@
 #![feature(proc_macro)]
 
 extern crate shio;
-extern crate shio_macro;
-use shio_macro::*;
 
 use shio::prelude::*;
 
