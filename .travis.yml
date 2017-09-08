@@ -30,7 +30,11 @@ before_script:
   - cargo install -q cargo-travis || true
 
 script:
-  - cargo test --all
+  - if [ "$TRAVIS_RUST_VERSION" = "nightly" ] ; then
+      cargo test --all --features "nightly"
+    elif
+      cargo test --all --exclude "shio_macros" --exclude "hello_macros"
+    fi
 
 after_success:
   - cargo coveralls -p shio
