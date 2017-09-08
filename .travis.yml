@@ -31,9 +31,9 @@ before_script:
 
 script:
   - if [ "$TRAVIS_RUST_VERSION" = "nightly" ] ; then
-      cargo test --all --features "nightly"
+      cargo test --all --features "nightly";
     elif
-      cargo test --all --exclude "shio_macros" --exclude "hello_macros"
+      cargo test --all --exclude "shio_macros" --exclude "hello_macros";
     fi
 
 after_success:
