@@ -20,7 +20,7 @@ pub fn post(opts: TokenStream, item: TokenStream) -> TokenStream {
 
 fn impl_route_rewrite(meth: syn::Expr, opts: TokenStream, item: TokenStream) -> TokenStream {
     let item = item.to_string();
-    let item = syn::parse_item(&item).expect("Unable to parse item associated to get attribute");
+    let item = syn::parse_item(&item).expect("unable to parse item associated to get attribute");
 
     match &item.node {
         &syn::ItemKind::Fn(_, _, _, _, _, _) => {}
@@ -28,25 +28,25 @@ fn impl_route_rewrite(meth: syn::Expr, opts: TokenStream, item: TokenStream) -> 
     }
 
     let opts = opts.to_string();
-    let opts = syn::parse_token_trees(&opts).expect("Unable to parse options of get attribute");
+    let opts = syn::parse_token_trees(&opts).expect("unable to parse options of get attribute");
     let opts = &opts[0];
 
     let tts = match opts {
         &syn::TokenTree::Delimited(ref delim) => &delim.tts,
-        _ => panic!("Invalid attribute options"),
+        _ => panic!("unvalid attribute options"),
     };
     let tt1 = &tts[0];
     let tok = match tt1 {
         &syn::TokenTree::Token(ref tok) => tok,
-        _ => panic!("Expected a token as first attribute option"),
+        _ => panic!("expected a token as first attribute option"),
     };
     let lit = match tok {
         &syn::Token::Literal(ref lit) => lit,
-        _ => panic!("Expected a literal as first attribute option"),
+        _ => panic!("expected a literal as first attribute option"),
     };
     match lit {
         &syn::Lit::Str(_, _) => {}
-        _ => panic!("Expected a string literal as first attribute option"),
+        _ => panic!("expected a string literal as first attribute option"),
     };
 
     Route {

@@ -5,8 +5,9 @@ authors = ["Quentin Laveau <qlaveau@gmail.com>"]
 workspace = ".."
 
 [dependencies]
-syn = {version="0.11.11", features=["full","parsing","printing"]}
+syn = { version="0.11.11", features=["full","parsing","printing"] }
 quote="0.3"
 
 [lib]
 proc-macro = true
+
