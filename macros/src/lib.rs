@@ -18,6 +18,31 @@ pub fn post(opts: TokenStream, item: TokenStream) -> TokenStream {
     impl_route_rewrite(syn::parse_expr("::shio::Method::Post").unwrap(), opts, item)
 }
 
+#[proc_macro_attribute]
+pub fn patch(opts: TokenStream, item: TokenStream) -> TokenStream {
+    impl_route_rewrite(syn::parse_expr("::shio::Method::Patch").unwrap(), opts, item)
+}
+
+#[proc_macro_attribute]
+pub fn put(opts: TokenStream, item: TokenStream) -> TokenStream {
+    impl_route_rewrite(syn::parse_expr("::shio::Method::Put").unwrap(), opts, item)
+}
+
+#[proc_macro_attribute]
+pub fn delete(opts: TokenStream, item: TokenStream) -> TokenStream {
+    impl_route_rewrite(syn::parse_expr("::shio::Method::Delete").unwrap(), opts, item)
+}
+
+#[proc_macro_attribute]
+pub fn options(opts: TokenStream, item: TokenStream) -> TokenStream {
+    impl_route_rewrite(syn::parse_expr("::shio::Method::options").unwrap(), opts, item)
+}
+
+#[proc_macro_attribute]
+pub fn head(opts: TokenStream, item: TokenStream) -> TokenStream {
+    impl_route_rewrite(syn::parse_expr("::shio::Method::Head").unwrap(), opts, item)
+}
+
 fn impl_route_rewrite(meth: syn::Expr, opts: TokenStream, item: TokenStream) -> TokenStream {
     let item = item.to_string();
     let item = syn::parse_item(&item).expect("unable to parse item associated to get attribute");
