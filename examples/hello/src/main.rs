@@ -31,8 +31,8 @@ fn main() {
     // Construct a _default_ `Shio` service, mount the `index` handler, and
     // run indefinitely on port `7878` (by default, binds to both `0.0.0.0` and `::0`).
     Shio::default()
-        .route((Method::Get, "/", hello_world))
-        .route((Method::Get, "/{name}", hello))
+        .route((Method::GET, "/", hello_world))
+        .route((Method::GET, "/{name}", hello))
         .run(":7878")
         .unwrap();
 
@@ -46,8 +46,8 @@ fn main() {
 
     let mut router = shio::router::Router::new();
 
-    router.route((Method::Get, "/", hello_world));
-    router.route((Method::Get, "/{name}", hello));
+    router.route((Method::GET, "/", hello_world));
+    router.route((Method::GET, "/{name}", hello));
 
     let mut service = Shio::new(router);
 

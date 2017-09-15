@@ -4,8 +4,8 @@ use hyper;
 use futures::{future, Future, IntoFuture};
 
 use response::Response;
-use StatusCode;
-use header::ContentLength;
+use http::StatusCode;
+use http::header::ContentLength;
 use ext::{BoxFuture, FutureExt};
 use handler::default_catch;
 

@@ -45,7 +45,7 @@ fn index(ctx: Context) -> BoxFuture<Response, errors::Error> {
             let body: RequestBody = serde_json::from_slice(&data)?;
             let s = serde_json::to_string(&ResponseBody { id: 20, name: body.name })?;
 
-            Ok(Response::build().header(header::ContentType::json()).body(s))
+            Ok(Response::build().header(http::header::ContentType::json()).body(s))
         })
         // Put our future inside a Box so we can name our return type
         // This part will go away once `impl Trait` is stablized in Rust
@@ -54,7 +54,7 @@ fn index(ctx: Context) -> BoxFuture<Response, errors::Error> {
 
 fn main() {
     Shio::default()
-        .route((Method::Post, "/", index))
+        .route((Method::POST, "/", index))
         .run(":7878")
         .unwrap();
 }

@@ -1,8 +1,8 @@
 use hyper::Body;
 
 use response::Response;
-use StatusCode;
-use header::Header;
+use http::StatusCode;
+use http::header::Header;
 
 /// An HTTP response builder.
 ///

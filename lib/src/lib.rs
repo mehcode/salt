@@ -3,6 +3,7 @@
 #![cfg_attr(feature = "nightly", feature(specialization))]
 
 extern crate futures;
+extern crate http as http_types;
 extern crate hyper;
 #[macro_use]
 extern crate log;
@@ -24,8 +25,7 @@ pub mod errors;
 pub mod router;
 pub mod util;
 pub mod data;
-
-pub use hyper::{header, Method, StatusCode};
+pub mod http;
 
 pub use response::Response;
 pub use request::Request;
@@ -38,9 +38,10 @@ pub use errors::Error;
 
 /// Re-exports important traits and types. Meant to be glob imported when using Shio.
 pub mod prelude {
-    pub use super::{header, Context, Method, Request, Response, Shio, StatusCode};
-    pub use super::router::Parameters;
+    pub use {Context, Request, Response, Shio, http};
+    pub use router::Parameters;
+    pub use ext::{BoxFuture, FutureExt};
+    pub use http::{Method, StatusCode};
 
     pub use futures::{Future, Stream, IntoFuture};
-    pub use ext::{BoxFuture, FutureExt};
 }

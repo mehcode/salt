@@ -80,7 +80,7 @@ fn index(ctx: Context) -> BoxFuture<Response, Error> {
 
             Ok(
                 Response::build()
-                    .header(header::ContentType::json())
+                    .header(http::header::ContentType::json())
                     .body(s),
             )
         })
@@ -91,7 +91,7 @@ fn main() {
     pretty_env_logger::init().unwrap();
 
     Shio::default()
-        .route((Method::Get, "/{name}", index))
+        .route((Method::GET, "/{name}", index))
         .run(":7878")
         .unwrap();
 }

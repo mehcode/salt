@@ -20,7 +20,7 @@ fn hello(ctx: Context) -> Result<Response, askama::Error> {
 
 fn main() {
     Shio::default()
-        .route((Method::Get, "/hello/{name}", hello))
+        .route((Method::GET, "/hello/{name}", hello))
         .run(":7878")
         .unwrap()
 }

@@ -36,8 +36,8 @@ fn hello(ctx: Context) -> Response {
 
 fn main() {
     Shio::default()
-        .route((Method::Get, "/", hello_world))
-        .route((Method::Get, "/{name}", hello))
+        .route((Method::GET, "/", hello_world))
+        .route((Method::GET, "/{name}", hello))
         .run(":7878").unwrap();
 }
 ```
