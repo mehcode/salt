@@ -1,5 +1,8 @@
+mod builder;
 
 use hyper::{self, Method};
+
+pub use self::builder::Builder;
 
 pub struct Request {
     method: Method,
@@ -48,5 +51,11 @@ impl Request {
     #[inline]
     pub fn path(&self) -> &str {
         self.uri.path()
+    }
+
+    /// Create a new `Builder`
+    #[inline]
+    pub fn builder() -> Builder {
+        Builder::default()
     }
 }
