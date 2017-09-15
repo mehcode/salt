@@ -20,6 +20,7 @@ tokio-proto = "0.1.1"
 regex = "0.2"
 log = "0.3"
 unsafe-any = "0.4.2"
+http = "0.1"
 
 [features]
 default = []

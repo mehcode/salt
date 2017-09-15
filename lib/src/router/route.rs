@@ -4,6 +4,7 @@ use hyper::{self, Method};
 use futures::IntoFuture;
 
 use context::Context;
+use http;
 use handler::{BoxHandler, Handler};
 use response::Response;
 use router::pattern::Pattern;
@@ -27,7 +28,7 @@ impl Route {
     /// # Response::new()
     /// });
     /// ```
-    pub fn new<P, H>(method: Method, pattern: P, handler: H) -> Self
+    pub fn new<P, H>(method: http::Method, pattern: P, handler: H) -> Self
     where
         P: Into<Pattern>,
         H: Handler + 'static,
@@ -36,7 +37,7 @@ impl Route {
         Self {
             handler: handler.into_box(),
             pattern: pattern.into(),
-            method,
+            method: method.to_hyper_method(),
         }
     }
 
@@ -56,13 +57,13 @@ impl Route {
     }
 }
 
-impl<P, H> From<(Method, P, H)> for Route
+impl<P, H> From<(http::Method, P, H)> for Route
 where
     P: Into<Pattern>,
     H: Handler + 'static,
     <H::Result as IntoFuture>::Error: fmt::Debug + Send,
 {
-    fn from(arguments: (Method, P, H)) -> Self {
+    fn from(arguments: (http::Method, P, H)) -> Self {
         Self::new(arguments.0, arguments.1, arguments.2)
     }
 }

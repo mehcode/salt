@@ -10,8 +10,8 @@ use futures::{Future, IntoFuture};
 use futures::future::{self, FutureResult};
 use hyper;
 
-use StatusCode;
-use header::Headers;
+use http::StatusCode;
+use http::header::Headers;
 
 /// Represents an HTTP response.
 pub struct Response {

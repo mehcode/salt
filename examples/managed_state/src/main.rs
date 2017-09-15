@@ -24,7 +24,7 @@ fn hello(context: Context) -> Response {
 fn main() {
     Shio::default()
         .manage::<SharedCounter>(AtomicUsize::default())
-        .route((Method::Get, "/", hello))
+        .route((Method::GET, "/", hello))
         .run(":7878")
         .unwrap();
 }

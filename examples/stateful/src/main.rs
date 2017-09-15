@@ -25,7 +25,7 @@ impl shio::Handler for HandlerWithState {
 
 fn main() {
     Shio::default()
-        .route((Method::Get, "/", HandlerWithState::default()))
+        .route((Method::GET, "/", HandlerWithState::default()))
         .run(":7878")
         .unwrap();
 }

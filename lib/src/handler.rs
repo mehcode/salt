@@ -5,7 +5,7 @@ use hyper;
 
 use response::Response;
 use context::Context;
-use StatusCode;
+use http::StatusCode;
 use ext::{BoxFuture, FutureExt};
 
 #[cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value, use_debug))]
