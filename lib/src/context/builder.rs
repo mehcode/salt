@@ -2,7 +2,7 @@
 use tokio_core::reactor::Handle;
 use std::sync::Arc;
 use unsafe_any::UnsafeAny;
-use hyper::{Method, error, HttpVersion, Body};
+use hyper::{Method, HttpVersion, Body};
 use hyper::header::Header;
 
 use super::Context;
@@ -10,6 +10,7 @@ use state::State;
 use util::typemap::TypeMap;
 use request;
 use data;
+use errors::Error;
 
 /// Helper struct for construct a [`Context`]
 ///
@@ -60,19 +61,19 @@ impl Builder {
     }
 
     /// Set an header
-    pub fn set_header<H: Header>(mut self, value: H) -> Self {
-        self.request = self.request.set_header(value);
+    pub fn header<H: Header>(mut self, value: H) -> Self {
+        self.request = self.request.header(value);
         self
     }
 
     /// Set the request data
-    pub fn set_data<B: Into<Body>>(mut self, body: B) -> Self {
+    pub fn data<B: Into<Body>>(mut self, body: B) -> Self {
         self.body = body.into();
         self
     }
 
     /// Create the `Context`, returning any error that occurs during build.
-    pub fn finalize(self) -> Result<Context, error::UriError> {
+    pub fn finalize(self) -> Result<Context, Error> {
         let Self {
             handle, state,
             request,

@@ -73,6 +73,12 @@ impl From<hyper::Error> for Error {
     }
 }
 
+impl From<hyper::error::UriError> for Error {
+    fn from(err: hyper::error::UriError) -> Self {
+        Self { inner: ErrorKind::Hyper(err.into()) }
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.inner {

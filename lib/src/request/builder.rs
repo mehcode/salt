@@ -3,6 +3,7 @@ use hyper::{Method, Uri, error, HttpVersion, Headers};
 use hyper::header::Header;
 
 use super::Request;
+use errors::Error;
 
 /// Helper struct for construct a [`Request`]
 ///
@@ -49,13 +50,13 @@ impl Builder {
     }
 
     /// Set an header
-    pub fn set_header<H: Header>(mut self, value: H) -> Self {
+    pub fn header<H: Header>(mut self, value: H) -> Self {
         self.headers.set(value);
         self
     }
 
     /// Create the `Context`, returning any error that occurs during build.
-    pub fn finalize(self) -> Result<Request, error::UriError> {
+    pub fn finalize(self) -> Result<Request, Error> {
         let Self {
             method, uri,
             version, headers,
