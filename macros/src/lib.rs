@@ -10,37 +10,37 @@ use proc_macro::TokenStream;
 
 #[proc_macro_attribute]
 pub fn get(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::Get").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::GET").unwrap(), opts, item)
 }
 
 #[proc_macro_attribute]
 pub fn post(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::Post").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::POST").unwrap(), opts, item)
 }
 
 #[proc_macro_attribute]
 pub fn patch(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::Patch").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::PATCH").unwrap(), opts, item)
 }
 
 #[proc_macro_attribute]
 pub fn put(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::Put").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::PUT").unwrap(), opts, item)
 }
 
 #[proc_macro_attribute]
 pub fn delete(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::Delete").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::DELETE").unwrap(), opts, item)
 }
 
 #[proc_macro_attribute]
 pub fn options(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::options").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::OPTIONS").unwrap(), opts, item)
 }
 
 #[proc_macro_attribute]
 pub fn head(opts: TokenStream, item: TokenStream) -> TokenStream {
-    impl_route_rewrite(syn::parse_expr("::shio::Method::Head").unwrap(), opts, item)
+    impl_route_rewrite(syn::parse_expr("::shio::http::Method::HEAD").unwrap(), opts, item)
 }
 
 fn impl_route_rewrite(meth: syn::Expr, opts: TokenStream, item: TokenStream) -> TokenStream {
