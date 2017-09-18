@@ -53,7 +53,9 @@ impl From<io::Error> for ListenErrorKind {
 
 /// A generic "error" that can occur from inside Shio.
 #[derive(Debug)]
-pub struct Error { inner: ErrorKind }
+pub struct Error {
+    inner: ErrorKind,
+}
 
 #[derive(Debug)]
 enum ErrorKind {
@@ -63,19 +65,25 @@ enum ErrorKind {
 
 impl From<ListenError> for Error {
     fn from(err: ListenError) -> Self {
-        Self { inner: ErrorKind::Listen(err) }
+        Self {
+            inner: ErrorKind::Listen(err),
+        }
     }
 }
 
 impl From<hyper::Error> for Error {
     fn from(err: hyper::Error) -> Self {
-        Self { inner: ErrorKind::Hyper(err) }
+        Self {
+            inner: ErrorKind::Hyper(err),
+        }
     }
 }
 
 impl From<hyper::error::UriError> for Error {
     fn from(err: hyper::error::UriError) -> Self {
-        Self { inner: ErrorKind::Hyper(err.into()) }
+        Self {
+            inner: ErrorKind::Hyper(err.into()),
+        }
     }
 }
 

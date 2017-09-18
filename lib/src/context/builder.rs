@@ -2,7 +2,7 @@
 use tokio_core::reactor::Handle;
 use std::sync::Arc;
 use unsafe_any::UnsafeAny;
-use hyper::{Method, HttpVersion, Body};
+use hyper::{Body, HttpVersion};
 use hyper::header::Header;
 
 use super::Context;
@@ -11,6 +11,7 @@ use util::typemap::TypeMap;
 use request;
 use data;
 use errors::Error;
+use http::Method;
 
 /// Helper struct for construct a [`Context`]
 ///
@@ -75,12 +76,17 @@ impl Builder {
     /// Create the `Context`, returning any error that occurs during build.
     pub fn finalize(self) -> Result<Context, Error> {
         let Self {
-            handle, state,
+            handle,
+            state,
             request,
-            body
+            body,
         } = self;
 
-        Ok(Context::new(handle, request.finalize()?, state, data::Data::new(body)))
+        Ok(Context::new(
+            handle,
+            request.finalize()?,
+            state,
+            data::Data::new(body),
+        ))
     }
 }
-

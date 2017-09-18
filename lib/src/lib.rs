@@ -38,10 +38,10 @@ pub use errors::Error;
 
 /// Re-exports important traits and types. Meant to be glob imported when using Shio.
 pub mod prelude {
-    pub use {Context, Request, Response, Shio, http};
+    pub use {http, Context, Request, Response, Shio};
     pub use router::Parameters;
     pub use ext::{BoxFuture, FutureExt};
     pub use http::{Method, StatusCode};
 
-    pub use futures::{Future, Stream, IntoFuture};
+    pub use futures::{Future, IntoFuture, Stream};
 }

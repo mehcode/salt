@@ -1,9 +1,10 @@
 
-use hyper::{Method, Uri, error, HttpVersion, Headers};
+use hyper::{error, Headers, HttpVersion, Uri};
 use hyper::header::Header;
 
 use super::Request;
 use errors::Error;
+use http::Method;
 
 /// Helper struct for construct a [`Request`]
 ///
@@ -18,7 +19,7 @@ pub struct Builder {
 impl Default for Builder {
     fn default() -> Self {
         Self {
-            method: Method::Get,
+            method: Method::GET,
             uri: "/".parse::<Uri>(),
             version: HttpVersion::Http11,
             headers: Headers::new(),
@@ -58,8 +59,10 @@ impl Builder {
     /// Create the `Context`, returning any error that occurs during build.
     pub fn finalize(self) -> Result<Request, Error> {
         let Self {
-            method, uri,
-            version, headers,
+            method,
+            uri,
+            version,
+            headers,
         } = self;
 
         let uri = uri?;
@@ -67,4 +70,3 @@ impl Builder {
         Ok(Request::new((method, uri, version, headers)))
     }
 }
-

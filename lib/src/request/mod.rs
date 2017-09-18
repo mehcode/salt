@@ -1,8 +1,9 @@
 mod builder;
 
-use hyper::{self, Method};
+use hyper;
 
 pub use self::builder::Builder;
+use http::Method;
 
 pub struct Request {
     method: Method,

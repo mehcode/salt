@@ -21,7 +21,8 @@ impl Route {
     /// Constructs a new `Route` which matches against the provided information.
     ///
     /// ```rust
-    /// # use shio::{Response, Method};
+    /// # use shio::Response;
+    /// # use shio::http::Method;
     /// # use shio::router::Route;
     /// Route::new(Method::Post, "/inbox", |_| {
     ///     // [...]

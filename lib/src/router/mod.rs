@@ -8,7 +8,7 @@ pub use self::parameters::Parameters;
 
 use std::collections::HashMap;
 
-use hyper::{self, Method, StatusCode};
+use hyper::{self, StatusCode};
 use regex::RegexSet;
 use futures::future;
 
@@ -16,6 +16,7 @@ use handler::Handler;
 use context::Context;
 use response::Response;
 use ext::BoxFuture;
+use http::Method;
 
 // From: https://github.com/crumblingstatue/try_opt/blob/master/src/lib.rs#L30
 macro_rules! try_opt {
@@ -52,10 +53,11 @@ impl Router {
     /// For example, to match a `Get` request to `/users`:
     ///
     /// ```rust
-    /// # use shio::{Method, Response, StatusCode};
+    /// # use shio::Response;
     /// # use shio::router::Router;
+    /// # use shio::http::{Method, StatusCode};
     /// # let mut router = Router::new();
-    /// router.route((Method::GET, "/users", |_| {
+    /// router.add((Method::GET, "/users", |_| {
     ///     // [...]
     /// # Response::with(StatusCode::NoContent)
     /// }));
@@ -65,7 +67,7 @@ impl Router {
     /// [`Pattern`]: struct.Pattern.html
     pub fn add<R: Into<Route>>(&mut self, route: R) {
         let route: Route = route.into();
-        let method = route.method().clone();
+        let method = Method::from_hyper_method(&route.method());
 
         self.routes
             .entry(method.clone())
@@ -124,7 +126,6 @@ impl Handler for Router {
 #[cfg(test)]
 mod tests {
     use tokio_core::reactor::Core;
-    use hyper;
 
     use super::{Parameters, Router};
     use {Context, Handler, Response};
@@ -141,9 +142,9 @@ mod tests {
         let mut router = Router::new();
         router.add((Method::GET, "/hello", empty_handler));
 
-        assert!(router.find(&hyper::Method::Get, "/hello").is_some());
-        assert!(router.find(&hyper::Method::Get, "/aa").is_none());
-        assert!(router.find(&hyper::Method::Get, "/hello/asfa").is_none());
+        assert!(router.find(&Method::GET, "/hello").is_some());
+        assert!(router.find(&Method::GET, "/aa").is_none());
+        assert!(router.find(&Method::GET, "/hello/asfa").is_none());
     }
 
     /// Test for _some_ match for static in PUT, POST, DELETE
@@ -154,10 +155,10 @@ mod tests {
         router.add((Method::POST, "/hello", empty_handler));
         router.add((Method::DELETE, "/hello", empty_handler));
 
-        assert!(router.find(&hyper::Method::Get, "/hello").is_none());
-        assert!(router.find(&hyper::Method::Put, "/hello").is_some());
-        assert!(router.find(&hyper::Method::Post, "/hello").is_some());
-        assert!(router.find(&hyper::Method::Delete, "/hello").is_some());
+        assert!(router.find(&Method::GET, "/hello").is_none());
+        assert!(router.find(&Method::PUT, "/hello").is_some());
+        assert!(router.find(&Method::POST, "/hello").is_some());
+        assert!(router.find(&Method::DELETE, "/hello").is_some());
     }
 
     /// Test for the correct match for static
@@ -172,11 +173,15 @@ mod tests {
         //        This is an implementation detail; store the source strings and we'll
         //        match against that
         assert_eq!(
-            router.find(&hyper::Method::Get, "/hello").unwrap().pattern().as_str(),
+            router
+                .find(&Method::GET, "/hello")
+                .unwrap()
+                .pattern()
+                .as_str(),
             "^/hello$"
         );
         assert_eq!(
-            router.find(&hyper::Method::Get, "/aa").unwrap().pattern().as_str(),
+            router.find(&Method::GET, "/aa").unwrap().pattern().as_str(),
             "^/aa$"
         );
     }
@@ -187,10 +192,10 @@ mod tests {
         let mut router = Router::new();
         router.add((Method::GET, "/user/{id}", empty_handler));
 
-        assert!(router.find(&hyper::Method::Get, "/user/asfa").is_some());
-        assert!(router.find(&hyper::Method::Get, "/user/profile").is_some());
-        assert!(router.find(&hyper::Method::Get, "/user/3289").is_some());
-        assert!(router.find(&hyper::Method::Get, "/user").is_none());
+        assert!(router.find(&Method::GET, "/user/asfa").is_some());
+        assert!(router.find(&Method::GET, "/user/profile").is_some());
+        assert!(router.find(&Method::GET, "/user/3289").is_some());
+        assert!(router.find(&Method::GET, "/user").is_none());
     }
 
     /// Test for segment parameter value
@@ -207,7 +212,8 @@ mod tests {
         let mut core = Core::new().unwrap();
         let context = Context::builder(core.handle())
             .uri("/user/3289")
-            .finalize().unwrap();
+            .finalize()
+            .unwrap();
 
         let work = router.call(context);
 
@@ -220,30 +226,35 @@ mod tests {
         let mut router = Router::new();
         router.add((Method::GET, "/static/{file: .+}", empty_handler));
 
-        assert!(router.find(&hyper::Method::Get, "/static").is_none());
-        assert!(router.find(&hyper::Method::Get, "/static/").is_none());
-        assert!(router.find(&hyper::Method::Get, "/static/blah").is_some());
-        assert!(router.find(&hyper::Method::Get, "/static/rahrahrah").is_some());
+        assert!(router.find(&Method::GET, "/static").is_none());
+        assert!(router.find(&Method::GET, "/static/").is_none());
+        assert!(router.find(&Method::GET, "/static/blah").is_some());
+        assert!(router.find(&Method::GET, "/static/rahrahrah").is_some());
     }
 
     /// Test for segment parameter value
     #[test]
     fn test_param_get_custom() {
         let mut router = Router::new();
-        router.add((Method::GET, "/static/{filename: .*}", |context: Context| {
-            // FIXME: We should have an assert that we got here
-            assert_eq!(
-                &context.get::<Parameters>()["filename"],
-                "path/to/file/is/here"
-            );
+        router.add((
+            Method::GET,
+            "/static/{filename: .*}",
+            |context: Context| {
+                // FIXME: We should have an assert that we got here
+                assert_eq!(
+                    &context.get::<Parameters>()["filename"],
+                    "path/to/file/is/here"
+                );
 
-            Response::with(StatusCode::NoContent)
-        }));
+                Response::with(StatusCode::NoContent)
+            },
+        ));
 
         let mut core = Core::new().unwrap();
         let context = Context::builder(core.handle())
             .uri("/static/path/to/file/is/here")
-            .finalize().unwrap();
+            .finalize()
+            .unwrap();
 
         let work = router.call(context);
 

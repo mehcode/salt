@@ -11,7 +11,7 @@ use http_types;
 //       It will be removed in 0.4.
 
 /// The Request Method (VERB).
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct Method(http_types::Method);
 
 impl Method {
@@ -55,7 +55,22 @@ impl Method {
             Self::PATCH => hyper::Method::Patch,
             Self::DELETE => hyper::Method::Delete,
 
-            _ => unimplemented!()
+            _ => unimplemented!(),
+        }
+    }
+
+    // Temporary until Hyper 0.12
+    pub(crate) fn from_hyper_method(hm: &hyper::Method) -> Self {
+        match *hm {
+            hyper::Method::Options => Self::OPTIONS,
+            hyper::Method::Head => Self::HEAD,
+            hyper::Method::Get => Self::GET,
+            hyper::Method::Post => Self::POST,
+            hyper::Method::Put => Self::PUT,
+            hyper::Method::Patch => Self::PATCH,
+            hyper::Method::Delete => Self::DELETE,
+
+            _ => unimplemented!(),
         }
     }
 }
