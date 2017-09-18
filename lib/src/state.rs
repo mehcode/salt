@@ -10,7 +10,7 @@ pub struct State {
     request: TypeMap,
 
     /// State shared across all requests.
-    shared: Arc<TypeMap<UnsafeAny + Send + Sync>>,
+    pub(crate) shared: Arc<TypeMap<UnsafeAny + Send + Sync>>,
 }
 
 impl Default for State {

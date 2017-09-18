@@ -1,3 +1,5 @@
+mod builder;
+
 use std::ops::Deref;
 
 use tokio_core::reactor::Handle;
@@ -8,6 +10,8 @@ use request::Request;
 use state::{FromState, State};
 use Data;
 pub use state::Key;
+
+pub use self::builder::Builder;
 
 /// `Context` represents the context of the current HTTP request.
 ///
@@ -78,6 +82,13 @@ impl Context {
     /// Deconstruct current context
     pub fn deconstruct(self) -> (Handle, State, Request, Data) {
         (self.handle, self.state, self.request, self.body)
+    }
+    
+    /// Create a new context [`Builder`]
+    ///
+    /// [`Builder`]: struct.Builder.html
+    pub fn builder(handle: Handle) -> Builder {
+        Builder::new(handle)
     }
 }
 

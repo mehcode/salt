@@ -13,7 +13,7 @@ use http::header::Header;
 ///
 /// ```rust
 /// # use shio::response::{self, Response};
-/// # use shio::StatusCode;
+/// # use shio::http::StatusCode;
 /// // A 204, "No Content", Response
 /// let response: Response = response::Builder::new().status(StatusCode::NoContent).into();
 ///
@@ -39,7 +39,7 @@ impl Builder {
     ///
     /// ```rust
     /// # use shio::response::{self, Response};
-    /// # use shio::StatusCode;
+    /// # use shio::http::StatusCode;
     /// let response: Response = response::Builder::new().status(StatusCode::BadRequest).into();
     /// ```
     #[inline]
@@ -52,7 +52,7 @@ impl Builder {
     ///
     /// ```rust
     /// # use shio::response::{self, Response};
-    /// # use shio::header;
+    /// # use shio::http::header;
     /// let response: Response = response::Builder::new()
     ///     // Date: Tue, 15 Nov 1994 08:12:31 GMT
     ///     .header(header::Date(std::time::SystemTime::now().into()))

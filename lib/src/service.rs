@@ -14,6 +14,7 @@ use state::State;
 use util::typemap::TypeMap;
 use ext::BoxFuture;
 use Data;
+use http::Method;
 
 // FIXME: Why does #[derive(Clone)] not work here? This _seems_ like a implementation that
 //        should be auto-derived.
@@ -61,7 +62,7 @@ where
 pub(crate) fn from_hyper_request(request: hyper::Request) -> (Request, Data) {
     let (method, uri, version, header, body) = request.deconstruct();
     (
-        Request::new((method, uri, version, header)),
+        Request::new((Method::from_hyper_method(&method), uri, version, header)),
         Data::new(body),
     )
 }
