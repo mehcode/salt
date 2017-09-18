@@ -47,13 +47,10 @@ pub mod prelude {
     pub use {Context, Request, Response, Shio, http};
     pub use router::Parameters;
     pub use ext::{BoxFuture, FutureExt};
-<<<<<<< dae0eb566bc7a341a901979101fca66a44f28bf4
     pub use http::{Method, StatusCode};
 
     pub use futures::{Future, Stream, IntoFuture};
-=======
 
     #[cfg(feature = "nightly")]
     pub use shio_macros::{get, post};
->>>>>>> Rename proc-macro related crates
 }
