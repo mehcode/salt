@@ -91,5 +91,13 @@ impl IntoFuture for Response {
     }
 }
 
+impl From<hyper::Response> for Response {
+    fn from(response: hyper::Response) -> Self {
+        Response {
+            inner: response
+        }
+    }
+}
+
 #[deprecated(since = "0.0.6", note = "use BoxFuture<Response, _> instead")]
 pub type BoxFutureResponse<E = hyper::Error> = Box<Future<Item = Response, Error = E>>;
