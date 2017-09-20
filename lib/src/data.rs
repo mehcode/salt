@@ -21,3 +21,9 @@ impl Stream for Data {
         self.0.poll().map_err(Error::from)
     }
 }
+
+impl Into<hyper::Body> for Data {
+    fn into(self) -> hyper::Body {
+        self.0
+    }
+}
