@@ -52,7 +52,8 @@ impl Router {
     /// For example, to match a `Get` request to `/users`:
     ///
     /// ```rust
-    /// # use shio::{Method, Response, StatusCode};
+    /// # use shio::http::{Method, StatusCode};
+    /// # use shio::response::Response;
     /// # use shio::router::Router;
     /// # let mut router = Router::new();
     /// router.route((Method::GET, "/users", |_| {

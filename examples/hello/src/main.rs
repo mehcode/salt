@@ -46,8 +46,8 @@ fn main() {
 
     let mut router = shio::router::Router::new();
 
-    router.route((Method::GET, "/", hello_world));
-    router.route((Method::GET, "/{name}", hello));
+    router.add((Method::GET, "/", hello_world));
+    router.add((Method::GET, "/{name}", hello));
 
     let mut service = Shio::new(router);
 
