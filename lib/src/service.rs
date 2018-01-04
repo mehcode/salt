@@ -6,8 +6,10 @@ use hyper;
 use tokio_core::reactor::Handle;
 use futures::{future, Future, IntoFuture};
 use unsafe_any::UnsafeAny;
+use http::header::ContentLength;
 
 use request::Request;
+use response::Response;
 use handler::{default_catch, Handler};
 use context::Context;
 use state::State;
@@ -59,11 +61,21 @@ where
 }
 
 pub(crate) fn from_hyper_request(request: hyper::Request) -> (Request, Data) {
+    let remote_addr = request.remote_addr();
     let (method, uri, version, header, body) = request.deconstruct();
     (
-        Request::new((method, uri, version, header)),
+        Request::new((method, uri, version, header, remote_addr)),
         Data::new(body),
     )
+}
+
+fn response_log_line(resp: &Response) -> String {
+    let headers = resp.headers();
+    if let Some(len) = headers.get::<ContentLength>() {
+        format!("{} {}", resp.status(), len)
+    } else {
+        format!("{}", resp.status())
+    }
 }
 
 impl<H: Handler + 'static> hyper::server::Service for Service<H>
@@ -77,6 +89,7 @@ where
 
     fn call(&self, request: Self::Request) -> Self::Future {
         let (request, data) = from_hyper_request(request);
+        let log = request.log_line();
         let state = State::new(self.shared_state.clone());
         let ctx = Context::new(self.handle.clone(), request, state, data);
         let handler = self.handler.clone();
@@ -84,13 +97,15 @@ where
         Box::new(
             AssertUnwindSafe(future::lazy(move || handler.call(ctx).into_future()))
                 .catch_unwind()
-                .then(|result| -> BoxFuture<hyper::Response, hyper::Error> {
+                .then(move |result| -> BoxFuture<hyper::Response, hyper::Error> {
+                    let response = match result {
+                        Err(err) => default_catch(err),
+                        Ok(Err(err)) => default_catch(err),
+                        Ok(Ok(response)) => response,
+                    };
+                    info!("{} {}", log, response_log_line(&response));
                     Box::new(future::ok(
-                        (match result {
-                            Err(err) => default_catch(err),
-                            Ok(Err(err)) => default_catch(err),
-                            Ok(Ok(response)) => response,
-                        }).into_hyper_response(),
+                        response.into_hyper_response(),
                     ))
                 }),
         )

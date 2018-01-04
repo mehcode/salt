@@ -70,6 +70,12 @@ impl Response {
     pub fn headers_mut(&mut self) -> &mut Headers {
         self.inner.headers_mut()
     }
+
+    /// Get an immutable reference to the headers.
+    #[inline]
+    pub fn headers(&self) -> &Headers {
+        self.inner.headers()
+    }
 }
 
 impl Default for Response {
