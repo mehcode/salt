@@ -113,6 +113,10 @@ where
             })
         };
 
+        for addr in &addrs {
+            info!("listening on {}", &addr);
+        }
+
         for _ in 0..self.threads {
             children.push(spawn());
         }
