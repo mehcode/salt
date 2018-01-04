@@ -2,6 +2,7 @@
 #![cfg_attr(feature = "cargo-clippy", allow(missing_docs_in_private_items, stutter))]
 #![cfg_attr(feature = "nightly", feature(specialization))]
 
+extern crate chrono;
 extern crate futures;
 extern crate http as http_types;
 extern crate hyper;
