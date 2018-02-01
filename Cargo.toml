@@ -4,6 +4,7 @@ lto = true
 [workspace]
 members = [
   "lib/",
+  "macros/",
   "examples/hello",
   "examples/json",
   "examples/proxy",
@@ -12,4 +13,5 @@ members = [
   "examples/templates_askama",
   "examples/postgres",
   "examples/managed_state",
+  "examples/hello_macros",
 ]

@@ -1,6 +1,6 @@
 #![cfg_attr(feature = "cargo-clippy", warn(clippy, clippy_pedantic))]
 #![cfg_attr(feature = "cargo-clippy", allow(missing_docs_in_private_items, stutter))]
-#![cfg_attr(feature = "nightly", feature(specialization))]
+#![cfg_attr(feature = "nightly", feature(specialization, proc_macro))]
 
 extern crate futures;
 extern crate http as http_types;
@@ -14,6 +14,9 @@ extern crate tokio_core;
 extern crate unsafe_any;
 
 pub mod state;
+#[cfg(feature = "nightly")]
+extern crate shio_macros;
+
 pub mod context;
 mod handler;
 mod shio;
@@ -36,6 +39,9 @@ pub use handler::Handler;
 pub use data::Data;
 pub use errors::Error;
 
+#[cfg(feature = "nightly")]
+pub use shio_macros::{get, post};
+
 /// Re-exports important traits and types. Meant to be glob imported when using Shio.
 pub mod prelude {
     pub use {Context, Request, Response, Shio, http};
@@ -44,4 +50,7 @@ pub mod prelude {
     pub use http::{Method, StatusCode};
 
     pub use futures::{Future, Stream, IntoFuture};
+
+    #[cfg(feature = "nightly")]
+    pub use shio_macros::{get, post};
 }
