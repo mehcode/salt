@@ -52,8 +52,9 @@ where
     }
 
     /// Set the number of threads to use.
-    pub fn threads(&mut self, threads: usize) {
+    pub fn threads(&mut self, threads: usize) -> &mut Self {
         self.threads = threads;
+        self
     }
 
     #[cfg_attr(feature = "cargo-clippy", allow(use_debug, never_loop))]
